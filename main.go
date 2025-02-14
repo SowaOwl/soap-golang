@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"soap-go/soap"
+	"soap-go/utils"
 	"time"
 )
 
@@ -18,7 +18,7 @@ func main() {
 
 	startTime := time.Now()
 
-	xmlOutput, err := soap.JsonToXML([]byte(jsonInput), "gbd:getPersonDataAccessControlForESBD")
+	xmlOutput, err := utils.JsonToXML([]byte(jsonInput), "gbd:getPersonDataAccessControlForESBD")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,8 +1,10 @@
-package soap
+package utils
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"fmt"
 )
 
@@ -46,4 +48,33 @@ func JsonToXML(jsonData []byte, rootName string) ([]byte, error) {
 	}
 
 	return xml.MarshalIndent(root, "", "  ")
+}
+
+func GetResultFromResponse(resultKey string, jsonData *bytes.Buffer) (map[string]interface{}, error) {
+	var result map[string]interface{}
+	err := json.Unmarshal(jsonData.Bytes(), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	re, ok := findKey(result, resultKey)
+	if ok {
+		return re, nil
+	} else {
+		return nil, errors.New("result key not found")
+	}
+}
+
+func findKey(data map[string]interface{}, key string) (map[string]interface{}, bool) {
+	for k, v := range data {
+		if k == key {
+			return v.(map[string]interface{}), true
+		}
+		if nestedMap, ok := v.(map[string]interface{}); ok {
+			if foundValue, found := findKey(nestedMap, key); found {
+				return foundValue, true
+			}
+		}
+	}
+	return nil, false
 }
