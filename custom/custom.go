@@ -44,7 +44,7 @@ type Body struct {
 	Request string   `xml:",innerxml"`
 }
 
-func (c *Client) SendRequest(url string, resultStr string, xmlStr string) ([]byte, error) {
+func (c *Client) SendRequest(url string, xmlStr string) ([]byte, error) {
 	soapRequest := Envelope{
 		Xmlns:    "http://schemas.xmlsoap.org/soap/envelope/",
 		XmlnsGbd: "http://data.gbd.chdb.scb.kz/",
