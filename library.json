@@ -1,0 +1,10 @@
+{
+  "test": "test",
+  "test-in": {
+    "test-in1": "1",
+    "test-in2": "2"
+  },
+  "test-arr": [
+    "1", "2", "3"
+  ]
+}

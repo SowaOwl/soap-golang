@@ -44,7 +44,7 @@ type Body struct {
 	Request string   `xml:",innerxml"`
 }
 
-func (c *Client) SendRequest(url string, xmlStr string) ([]byte, error) {
+func (c *Client) SendRequest(url string, xmlStr string, login string, password string) ([]byte, error) {
 	soapRequest := Envelope{
 		Xmlns:    "http://schemas.xmlsoap.org/soap/envelope/",
 		XmlnsGbd: "http://data.gbd.chdb.scb.kz/",
@@ -68,6 +68,8 @@ func (c *Client) SendRequest(url string, xmlStr string) ([]byte, error) {
 
 	req.Header.Set("Content-Type", "text/xml; charset=utf-8")
 
+	req.SetBasicAuth(login, password)
+
 	resp, err := c.http.Do(req)
 	if err != nil {
 		return nil, err
@@ -80,21 +82,4 @@ func (c *Client) SendRequest(url string, xmlStr string) ([]byte, error) {
 	}
 
 	return body, nil
-
-	//jsonData, err := xj.Convert(bytes.NewReader(body))
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//jsonResult, err := GetResultFromResponse(resultStr, jsonData)
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//response, err := json.MarshalIndent(jsonResult, "", "")
-	//if err != nil {
-	//	return "", err
-	//}
-	//
-	//return string(response), nil
 }
