@@ -36,14 +36,23 @@ func toXMLElement(key string, value interface{}) interface{} {
 	}
 }
 
-func JsonToXML(jsonData []byte, rootName string) ([]byte, error) {
+func JsonToXML(jsonData []byte, rootName string, rootAttr xml.Attr) ([]byte, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal(jsonData, &data); err != nil {
 		return nil, err
 	}
 
-	root := Element{XMLName: xml.Name{Local: rootName}}
+	root := Element{XMLName: xml.Name{Local: rootName}, Attrs: []xml.Attr{rootAttr}}
 	for k, v := range data {
+		root.Content = append(root.Content, toXMLElement(k, v))
+	}
+
+	return xml.MarshalIndent(root, "", "  ")
+}
+
+func JsonMapToXml(jsonMap map[string]interface{}, rootName string, rootAttr xml.Attr) ([]byte, error) {
+	root := Element{XMLName: xml.Name{Local: rootName}, Attrs: []xml.Attr{rootAttr}}
+	for k, v := range jsonMap {
 		root.Content = append(root.Content, toXMLElement(k, v))
 	}
 
